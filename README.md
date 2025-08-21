@@ -1,4 +1,4 @@
-## Stocks tracking app
+## InvestLife — Practice markets. Build habits. Risk ₹0.
 
 https://github.com/DariusLukasukas/stocks/assets/64962012/d81789c6-18ee-4217-ba2d-c67130a08239
 
@@ -73,4 +73,4 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-"# Stock-game" 
+"# InvestLife" 

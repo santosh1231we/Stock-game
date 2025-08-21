@@ -55,6 +55,9 @@ export default function Navigation() {
             </NavigationMenu>
             <CommandMenu />
 
+            <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
+              <span className="font-semibold">InvestLife</span> · Practice markets. Build habits. Risk ₹0.
+            </div>
             {mounted && sim && (
               <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
                 {sim.user.name} · ₹{sim.balance.toLocaleString()}

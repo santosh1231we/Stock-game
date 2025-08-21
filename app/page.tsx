@@ -5,7 +5,7 @@ export default function Landing() {
     <main className="min-h-screen bg-gradient-to-b from-zinc-950 to-black text-zinc-100">
       <div className="mx-auto max-w-5xl px-6 py-20">
         <h1 className="text-5xl font-extrabold tracking-tight">
-          Finly — Practice Investing with <span className="text-emerald-400">₹0 real money</span>
+          InvestLife — Practice markets. Build habits. Risk <span className="text-emerald-400">₹0</span>.
         </h1>
         <p className="mt-4 text-zinc-300 max-w-2xl">
           Get a monthly “salary”, buy real-world stocks with virtual cash, and learn safely.

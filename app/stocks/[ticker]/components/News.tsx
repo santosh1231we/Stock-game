@@ -69,12 +69,14 @@ export default async function News({ ticker }: { ticker: string }) {
               >
                 <span className="text-sm font-medium text-muted-foreground">
                   {article.publisher} -{" "}
-                  {timeAgo(article.providerPublishTime.toISOString())}
+                  {timeAgo(new Date(article.providerPublishTime).toISOString())}
                 </span>
                 <span className="font-semibold">{article.title}</span>
-                <span className="text-sm font-medium text-muted-foreground">
-                  {article.published_at}
-                </span>
+                {article.thumbnail?.resolutions?.[0]?.url && (
+                  <span className="text-sm font-medium text-muted-foreground">
+                    {new URL(article.link).hostname}
+                  </span>
+                )}
               </Link>
             ))}
           </div>

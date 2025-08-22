@@ -1,30 +1,39 @@
 import { NextResponse } from "next/server";
-import { fetchStockSearch } from "@/lib/yahoo-finance/fetchStockSearch";
+import { unstable_noStore as noStore } from "next/cache";
+import yahooFinance from "yahoo-finance2";
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const q = searchParams.get("q");
-  if (!q || q.trim().length === 0) {
-    return NextResponse.json({ quotes: [] });
-  }
+export async function GET(req: Request) {
+  noStore();
+  const { searchParams } = new URL(req.url);
+  const q = searchParams.get("q")?.trim() || "";
+  if (!q) return NextResponse.json({ results: [] });
 
   try {
-    const res = await fetchStockSearch(q, 0, 100);
-    const blockSuffix = /(\-BL|\-PP|\-RE|\-R|\-W|NCD|BOND|BONDS)$/i;
-    const rank = (sym: string) => (sym.endsWith(".NS") ? 0 : sym.endsWith(".BO") ? 1 : 2);
-    const quotes = (res.quotes || [])
-      .filter((it: any) => (it.quoteType || "EQUITY") === "EQUITY")
-      .filter((it: any) => !blockSuffix.test(it.symbol))
-      .sort((a: any, b: any) => rank(a.symbol) - rank(b.symbol))
-      .slice(0, 20)
-      .map((it: any) => ({
-        symbol: it.symbol,
-        shortname: it.shortname || it.longname || it.symbol,
-        exchDisp: it.exchDisp,
+    const res = await yahooFinance.search(q, {
+      quotesCount: 10,
+      newsCount: 0,
+      enableFuzzyQuery: true,
+    });
+
+    const results = (res.quotes || [])
+      .filter((r: any) =>
+        r?.symbol &&
+        r?.quoteType !== "OPTION" &&
+        !String(r.symbol).includes("=")
+      )
+      .map((r: any) => ({
+        symbol: r.symbol as string,
+        name: (r.shortname ?? r.longname ?? r.symbol) as string,
+        exchange: (r.exchange ?? "") as string,
+        type: (r.quoteType ?? "") as string,
       }));
-    return NextResponse.json({ quotes });
+
+    return NextResponse.json({ results });
   } catch (e: any) {
-    return NextResponse.json({ error: e?.message || "search failed" }, { status: 500 });
+    return NextResponse.json(
+      { error: e?.message || "search failed" },
+      { status: 500 }
+    );
   }
 }
 

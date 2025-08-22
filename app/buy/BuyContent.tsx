@@ -1,0 +1,56 @@
+"use client";
+import { useEffect, useState } from "react";
+import TickerSearch from "@/components/search/TickerSearch";
+import { loadState, type SimState } from "@/lib/sim";
+
+export default function BuyContent() {
+  const [sim, setSim] = useState<SimState | null>(null);
+  useEffect(() => {
+    setSim(loadState());
+  }, []);
+
+  return (
+    <div>
+      <div className="rounded-2xl border p-4">
+        <div className="mb-3 text-sm opacity-70">
+          Search tickers to prepare a buy. Use the stock page to execute.
+        </div>
+        <TickerSearch />
+        {sim && (
+          <div className="mt-3 text-sm opacity-70">
+            Cash: ₹{sim.balance.toLocaleString()}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-6 rounded-2xl border p-4">
+        <div className="mb-3 text-sm font-medium">Recent Buys</div>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {sim?.txns
+            .filter((t) => t.type === "BUY")
+            .map((t) => (
+              <div key={t.id} className="rounded-xl bg-zinc-950 p-3 text-sm">
+                <div className="flex justify-between">
+                  <span className="font-semibold">BUY</span>
+                  <span className={t.amount >= 0 ? "text-emerald-400" : "text-red-400"}>
+                    {t.amount >= 0 ? "+" : ""}₹{Math.abs(t.amount).toLocaleString()}
+                  </span>
+                </div>
+                <div className="text-xs text-zinc-500">
+                  {t.symbol ? `${t.symbol} • ${t.qty} @ ${t.price?.toFixed(2)}` : "-"}
+                </div>
+                <div className="text-[10px] text-zinc-600">
+                  {new Date(t.ts).toLocaleString()}
+                </div>
+              </div>
+            ))}
+          {sim && !sim.txns.filter((t) => t.type === "BUY").length && (
+            <div className="text-sm opacity-60">No buy activity yet</div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+

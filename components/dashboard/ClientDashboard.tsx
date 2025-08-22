@@ -10,7 +10,7 @@ export default function ClientDashboard() {
   const router = useRouter();
   const [symbol, setSymbol] = useState("AAPL");
   const [search, setSearch] = useState("");
-  const [suggestions, setSuggestions] = useState<{ symbol: string; shortname: string; exchDisp?: string }[]>([]);
+  const [suggestions, setSuggestions] = useState<{ symbol: string; name: string; exchange?: string; type?: string }[]>([]);
   const [chart, setChart] = useState<{ t: string; c: number }[] | null>(null);
 
   useEffect(() => {
@@ -32,8 +32,8 @@ export default function ClientDashboard() {
         const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, { signal: ctrl.signal });
         if (!on) return;
         if (!res.ok) return setSuggestions([]);
-        const json = (await res.json()) as { quotes: any[] };
-        setSuggestions(json.quotes as any);
+        const json = (await res.json()) as { results: any[] };
+        setSuggestions((json.results || []) as any);
       } catch {
         if (!on) return;
         setSuggestions([]);
@@ -146,7 +146,7 @@ export default function ClientDashboard() {
                         }}
                         className="flex w-full items-center justify-between px-3 py-2 text-left hover:bg-zinc-900"
                       >
-                        <span className="font-medium">{s.shortname}</span>
+                        <span className="font-medium">{s.name}</span>
                         <span className="text-xs text-zinc-500">{s.symbol}</span>
                       </button>
                     ))}

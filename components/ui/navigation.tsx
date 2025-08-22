@@ -20,6 +20,10 @@ import { useEffect, useState } from "react"
 const NAVIGATION = [
   { title: "Markets", href: "/" },
   { title: "Screener", href: "/screener" },
+  { title: "Buy", href: "/buy" },
+  { title: "Sell", href: "/sell" },
+  { title: "Positions", href: "/positions" },
+  { title: "History", href: "/history" },
 ]
 
 export default function Navigation() {

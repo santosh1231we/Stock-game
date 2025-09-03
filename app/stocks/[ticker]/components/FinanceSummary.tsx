@@ -45,7 +45,7 @@ export default async function FinanceSummary({ ticker }: { ticker: string }) {
         const summaryAny = financeSummaryData as any
         const data = summaryAny?.[section]?.[item.key] ?? undefined
         let formattedData = "N/A"
-*
+
         if (data !== undefined && !isNaN(data)) {
           formattedData = item.format ? item.format(data) : data
         }

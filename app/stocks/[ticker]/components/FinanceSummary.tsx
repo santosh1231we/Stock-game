@@ -40,13 +40,12 @@ export default async function FinanceSummary({ ticker }: { ticker: string }) {
     <div className="grid grid-flow-col grid-rows-6 gap-4 md:grid-rows-3">
       {keysToDisplay.map((item) => {
         // Yahoo's quoteSummary response has strong typings per module, but we're
-        // selecting the module dynamically. Use a safe accessor to avoid TS
         // complaining about indexing with a string key during the build.
         const section = item.section || "summaryDetail"
         const summaryAny = financeSummaryData as any
         const data = summaryAny?.[section]?.[item.key] ?? undefined
         let formattedData = "N/A"
-
+*
         if (data !== undefined && !isNaN(data)) {
           formattedData = item.format ? item.format(data) : data
         }

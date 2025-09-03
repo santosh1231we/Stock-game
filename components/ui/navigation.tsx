@@ -13,9 +13,9 @@ import Link from "next/link"
 import GoBack from "./go-back"
 import { usePathname } from "next/navigation"
 import CommandMenu from "./command-menu"
-import { isLoggedIn } from "@/lib/auth"
-import { loadState } from "@/lib/sim"
 import { useEffect, useState } from "react"
+import SessionClient, { type Session } from "@/components/auth/SessionClient"
+import { loadState } from "@/lib/sim"
 
 const NAVIGATION = [
   { title: "Markets", href: "/" },
@@ -28,12 +28,9 @@ const NAVIGATION = [
 
 export default function Navigation() {
   const pathname = usePathname()
-  const [mounted, setMounted] = useState(false)
   const [sim, setSim] = useState<ReturnType<typeof loadState> | null>(null)
-
   useEffect(() => {
-    setMounted(true)
-    if (isLoggedIn()) setSim(loadState())
+    setSim(loadState())
   }, [])
 
   return (
@@ -59,14 +56,18 @@ export default function Navigation() {
             </NavigationMenu>
             <CommandMenu />
 
-            <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
-              <span className="font-semibold">InvestLife</span> · Practice markets. Build habits. Risk ₹0.
-            </div>
-            {mounted && sim && (
-              <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
-                {sim.user.name} · ₹{sim.balance.toLocaleString()}
-              </div>
-            )}
+            <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400"><span className="font-semibold">InvestLife</span> · Practice markets. Build habits. Risk ₹0.</div>
+            <SessionClient>
+              {(sess: Session) => (
+                <>
+                  {sess && (
+                    <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
+                      {sess.name} · ₹{sim?.balance.toLocaleString()}
+                    </div>
+                  )}
+                </>
+              )}
+            </SessionClient>
             <ThemeToggle />
           </div>
         </div>

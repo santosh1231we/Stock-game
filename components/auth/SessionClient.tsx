@@ -9,7 +9,11 @@ export default function SessionClient({ children }: { children: (s: Session) => 
   useEffect(() => {
     (async () => {
       try {
+<<<<<<< HEAD
         const res = await fetch("/api/session", { cache: "no-store" });
+=======
+        const res = await fetch("/api/session", { cache: "no-store", credentials: "include" });
+>>>>>>> c72da89 (commit)
         if (!res.ok) return setSession(null);
         const json = await res.json();
         setSession(json.session ?? null);

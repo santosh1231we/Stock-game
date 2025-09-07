@@ -9,11 +9,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-<<<<<<< HEAD
-    fetch("/api/session")
-=======
     fetch("/api/session", { credentials: "include" })
->>>>>>> c72da89 (commit)
       .then((r) => r.json())
       .then(({ session }) => {
         if (session) router.replace("/dashboard");
@@ -33,10 +29,7 @@ export default function LoginPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: username, email: userEmail }),
-<<<<<<< HEAD
-=======
       credentials: "include",
->>>>>>> c72da89 (commit)
     })
       .then((r) => (r.ok ? router.push("/dashboard") : r.json()))
       .catch(() => setError("Login failed"));

@@ -33,15 +33,9 @@ export async function POST(req: Request) {
       const resend = new Resend(process.env.RESEND_API_KEY);
       await resend.emails.send({
         from: process.env.EMAIL_FROM || "onboarding@resend.dev",
-<<<<<<< HEAD
-        to: "sitesblogger81@gmail.com",
-        subject: "User Login Notification",
-        html: `<p>User <strong>${name}</strong> with email <strong>${email}</strong> logged in at ${new Date().toISOString()}.</p>`,
-=======
         to: email,
         subject: "Welcome to InvestLife",
         html: `<p>Hi <strong>${name}</strong>, you're logged in. Happy investing!<br/>Time: ${new Date().toISOString()}</p>`,
->>>>>>> c72da89 (commit)
       });
     } catch {}
 

@@ -1,15 +1,4 @@
 "use client";
-<<<<<<< HEAD
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { isLoggedIn } from "@/lib/auth";
-
-export default function AuthGate({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  useEffect(() => {
-    if (!isLoggedIn()) router.replace("/login");
-  }, [router]);
-=======
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -41,7 +30,6 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
   }, [router]);
 
   if (!checked) return null;
->>>>>>> c72da89 (commit)
   return <>{children}</>;
 }
 

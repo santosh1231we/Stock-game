@@ -4,9 +4,6 @@ import { NextResponse } from "next/server";
 const SESSION_COOKIE = "investlife-session";
 
 export async function POST() {
-<<<<<<< HEAD
-  cookies().set(SESSION_COOKIE, "", { path: "/", maxAge: 0 });
-=======
   cookies().set(SESSION_COOKIE, "", {
     httpOnly: true,
     sameSite: "lax",
@@ -14,7 +11,6 @@ export async function POST() {
     path: "/",
     maxAge: 0,
   });
->>>>>>> c72da89 (commit)
   return NextResponse.json({ ok: true });
 }
 

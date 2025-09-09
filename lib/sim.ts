@@ -12,7 +12,8 @@ export type SimState = {
   user: { name: string };
   balance: number;
   monthlyIncome: number;
-  nextPayoutAt: number;
+  nextPayoutAt: number; // legacy, not used anymore for accrual
+  remainingActiveMs?: number; // time left to earn next salary while app is active
   portfolio: Holding[];
   txns: Txn[];
 };
@@ -24,6 +25,7 @@ const defaultState = (name = "Player"): SimState => ({
   balance: 10_000,
   monthlyIncome: 5_000,
   nextPayoutAt: Date.now() + 60 * 60 * 1000,
+  remainingActiveMs: 60 * 60 * 1000,
   portfolio: [],
   txns: [],
 });
@@ -31,7 +33,9 @@ const defaultState = (name = "Player"): SimState => ({
 export function loadState(): SimState {
   if (typeof window === "undefined") return defaultState();
   const raw = localStorage.getItem(KEY);
-  return raw ? (JSON.parse(raw) as SimState) : defaultState();
+  const s = raw ? (JSON.parse(raw) as SimState) : defaultState();
+  if (s.remainingActiveMs === undefined) s.remainingActiveMs = 60 * 60 * 1000;
+  return s;
 }
 
 export function saveState(s: SimState) {
@@ -62,6 +66,26 @@ export function claimSalary(): SimState {
     saveState(s);
   }
   return s;
+}
+
+// New: advance active time and auto-credit salary. Returns number of credits applied.
+export function advanceActive(ms: number): { state: SimState; credits: number } {
+  const s = loadState();
+  s.remainingActiveMs = Math.max(0, (s.remainingActiveMs ?? 60 * 60 * 1000) - ms);
+  let credits = 0;
+  while ((s.remainingActiveMs ?? 0) <= 0) {
+    s.balance += s.monthlyIncome;
+    s.txns.unshift({
+      id: crypto.randomUUID(),
+      ts: Date.now(),
+      type: "SALARY",
+      amount: s.monthlyIncome,
+    });
+    credits += 1;
+    s.remainingActiveMs = (s.remainingActiveMs ?? 0) + 60 * 60 * 1000;
+  }
+  saveState(s);
+  return { state: s, credits };
 }
 
 export function placeOrder(

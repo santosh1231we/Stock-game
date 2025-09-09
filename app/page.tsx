@@ -1,4 +1,6 @@
 import Link from "next/link";
+import HomeCta from "@/components/home/HomeCta";
+import TopMovers from "@/components/stocks/TopMovers";
 
 export default function Landing() {
   return (
@@ -12,17 +14,17 @@ export default function Landing() {
           Your mission: <span className="font-semibold">grow your net worth</span>.
         </p>
         <div className="mt-8 flex gap-4">
-          <Link href="/login" className="rounded-2xl bg-emerald-500 px-5 py-3 font-semibold text-black hover:bg-emerald-400">
-            Get Started
-                </Link>
-          <a href="/?range=1d" className="rounded-2xl border border-zinc-800 px-5 py-3 hover:bg-zinc-900">
-            View Markets
-          </a>
+          {/* Client-only CTA wrapper to avoid function-as-children from server */}
+          {/* @ts-expect-error Async boundary ok */}
+          <HomeCta />
         </div>
         <div className="mt-12 rounded-2xl border border-zinc-800 p-6">
           <p className="text-sm uppercase text-zinc-400">Tip</p>
           <p className="mt-1">Every 1 hour ≈ 1 month. Claim salary, then invest wisely. 💸</p>
         </div>
+        {/* Top Gainers / Losers */}
+        {/* @ts-expect-error Async Server Component */}
+        <TopMovers />
       </div>
     </main>
   );

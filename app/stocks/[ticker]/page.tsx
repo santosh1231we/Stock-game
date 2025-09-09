@@ -13,6 +13,8 @@ import { Interval } from "@/types/yahoo-finance"
 import { Suspense } from "react"
 import type { Metadata } from "next"
 import { fetchQuote } from "@/lib/yahoo-finance/fetchQuote"
+import IndicatorsPanel from "@/components/chart/IndicatorsPanel"
+import PriceAlerts from "@/components/stocks/PriceAlerts"
 
 type Props = {
   params: {
@@ -65,6 +67,8 @@ export default async function StocksPage({ params, searchParams }: Props) {
           >
             <StockChart ticker={ticker} range={range} interval={interval} />
           </Suspense>
+          {/* Client indicators (RSI, MACD) */}
+          <IndicatorsPanel symbol={ticker} />
           <Suspense
             fallback={
               <div className="flex h-[10rem] items-center justify-center text-muted-foreground ">
@@ -75,6 +79,7 @@ export default async function StocksPage({ params, searchParams }: Props) {
             <FinanceSummary ticker={ticker} />
           </Suspense>
           <TradeBox symbol={ticker} />
+          <PriceAlerts symbol={ticker} />
           <Suspense
             fallback={
               <div className="flex h-[10rem] items-center justify-center text-muted-foreground ">

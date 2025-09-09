@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { loadState, claimSalary, SimState } from "@/lib/sim";
+import { loadState, SimState, advanceActive } from "@/lib/sim";
 
 type QuoteLite = { symbol: string; regularMarketPrice?: number; regularMarketChangePercent?: number };
 
@@ -64,22 +64,39 @@ export default function ClientDashboard() {
     };
   }, [symbol]);
 
+  const lastTickRef = useRef<number | null>(null);
   useEffect(() => {
-    const timer = setInterval(() => {
-      setState((prev) => (prev ? { ...prev } : prev));
-    }, 1000);
-    return () => clearInterval(timer);
+    let on = true;
+    const tick = () => {
+      if (!on) return;
+      const now = Date.now();
+      const last = lastTickRef.current ?? now;
+      lastTickRef.current = now;
+      const visible = document.visibilityState === "visible";
+      if (visible) {
+        const { state: s, credits } = advanceActive(now - last);
+        setState({ ...s });
+        if (credits > 0) {
+          // fire a lightweight toast via custom event
+          window.dispatchEvent(new CustomEvent("investlife-salary", { detail: { credits } }));
+        }
+      }
+      requestAnimationFrame(tick);
+    };
+    lastTickRef.current = Date.now();
+    const id = requestAnimationFrame(tick);
+    return () => {
+      on = false;
+      cancelAnimationFrame(id);
+    };
   }, []);
 
   const nextPayoutSeconds = useMemo(() => {
     if (!state) return 0;
-    return Math.max(0, Math.floor((state.nextPayoutAt - Date.now()) / 1000));
+    const ms = Math.max(0, state.remainingActiveMs ?? 0);
+    return Math.floor(ms / 1000);
   }, [state]);
-
-  const doSalary = () => {
-    const s = claimSalary();
-    setState({ ...s });
-  };
+  
   // trading moved to per-stock page
 
   const portfolioValue = useMemo(() => {
@@ -111,10 +128,7 @@ export default function ClientDashboard() {
           <div className="rounded-2xl border border-zinc-800 p-4">
             <div className="text-zinc-400 text-sm">Monthly Income</div>
             <div className="mt-1 text-3xl font-extrabold">₹{state.monthlyIncome.toLocaleString()}</div>
-            <div className="mt-2 text-xs text-zinc-400">Next payout in {Math.floor(nextPayoutSeconds / 60)}m {nextPayoutSeconds % 60}s</div>
-            <button onClick={doSalary} className="mt-3 rounded-xl bg-emerald-500 px-3 py-2 text-black font-semibold hover:bg-emerald-400">
-              Claim Salary (if ready)
-            </button>
+            <div className="mt-2 text-xs text-zinc-400">Next payout in {Math.floor(nextPayoutSeconds / 60)}m {nextPayoutSeconds % 60}s (active time)</div>
           </div>
           <div className="rounded-2xl border border-zinc-800 p-4">
             <div className="text-zinc-400 text-sm">Portfolio (rough)</div>

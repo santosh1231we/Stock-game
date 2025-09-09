@@ -22,7 +22,6 @@ export default function Landing() {
           <p className="mt-1">Every 1 hour ≈ 1 month. Claim salary, then invest wisely. 💸</p>
         </div>
         {/* Top Gainers / Losers */}
-        {/* @ts-expect-error Async Server Component */}
         <TopMovers />
       </div>
     </main>

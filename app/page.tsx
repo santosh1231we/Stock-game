@@ -15,7 +15,6 @@ export default function Landing() {
         </p>
         <div className="mt-8 flex gap-4">
           {/* Client-only CTA wrapper to avoid function-as-children from server */}
-          {/* @ts-expect-error Async boundary ok */}
           <HomeCta />
         </div>
         <div className="mt-12 rounded-2xl border border-zinc-800 p-6">

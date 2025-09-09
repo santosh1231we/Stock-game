@@ -40,9 +40,7 @@ export default function RootLayout({
           >
             <Navigation />
             {/* Client notification portal */}
-            {/* @ts-expect-error Client Component in layout */}
             <NotificationBus />
-            {/* @ts-expect-error Client Component in layout */}
             <ServiceWorkerRegister />
             <main className="container">{children}</main>
             <Footer />

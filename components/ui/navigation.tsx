@@ -1,5 +1,5 @@
 "use client"
-import { ThemeToggle } from "./theme-toggle"
+// Theme toggle removed; moved to Profile section
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -68,7 +68,7 @@ export default function Navigation() {
                 </>
               )}
             </SessionClient>
-            <ThemeToggle />
+            <Link href="/profile" className="rounded-full border border-zinc-800 px-3 py-1 text-xs text-zinc-400 hover:bg-zinc-900">Profile</Link>
           </div>
         </div>
       </div>

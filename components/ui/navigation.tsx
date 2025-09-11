@@ -15,6 +15,7 @@ import { usePathname } from "next/navigation"
 import CommandMenu from "./command-menu"
 import { useEffect, useState } from "react"
 import SessionClient, { type Session } from "@/components/auth/SessionClient"
+import NavUserBadge from "@/components/ui/NavUserBadge"
 import { loadState } from "@/lib/sim"
 
 const NAVIGATION = [
@@ -54,31 +55,9 @@ export default function Navigation() {
 
             <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400"><span className="font-semibold">InvestLife</span> · Practice markets. Build habits. Risk ₹0.</div>
             <SessionClient>
-              {(sess: Session) => {
-                const [profile, setProfile] = useState<{ fullName?: string } | null>(null)
-                useEffect(() => {
-                  let on = true
-                  ;(async () => {
-                    try {
-                      const res = await fetch('/api/profile', { credentials: 'include' })
-                      if (!on) return
-                      const json = await res.json()
-                      setProfile(json.profile || null)
-                    } catch {}
-                  })()
-                  return () => { on = false }
-                }, [])
-                const display = profile?.fullName || sess?.name
-                return (
-                  <>
-                    {sess && (
-                      <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
-                        {display} · ₹{sim?.balance.toLocaleString()}
-                      </div>
-                    )}
-                  </>
-                )
-              }}
+              {(sess: Session) => (
+                <NavUserBadge sess={sess} balance={sim?.balance} />
+              )}
             </SessionClient>
             <Link href="/profile" className="rounded-full border border-zinc-800 px-3 py-1 text-xs text-zinc-400 hover:bg-zinc-900">Profile</Link>
           </div>

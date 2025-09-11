@@ -25,6 +25,8 @@ export default function UserInfoPage() {
   const save = () => {
     const s = { fullName, username, email, location, bio }
     localStorage.setItem("investlife-userinfo", JSON.stringify(s))
+    // sync to cookie-backed API to reflect in session badge
+    fetch("/api/profile", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(s), credentials: "include" }).catch(() => {})
   }
 
   return (

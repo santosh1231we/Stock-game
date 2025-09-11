@@ -20,10 +20,6 @@ import { loadState } from "@/lib/sim"
 const NAVIGATION = [
   { title: "Markets", href: "/" },
   { title: "Screener", href: "/screener" },
-  { title: "Buy", href: "/buy" },
-  { title: "Sell", href: "/sell" },
-  { title: "Positions", href: "/positions" },
-  { title: "History", href: "/history" },
 ]
 
 export default function Navigation() {
@@ -58,15 +54,31 @@ export default function Navigation() {
 
             <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400"><span className="font-semibold">InvestLife</span> · Practice markets. Build habits. Risk ₹0.</div>
             <SessionClient>
-              {(sess: Session) => (
-                <>
-                  {sess && (
-                    <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
-                      {sess.name} · ₹{sim?.balance.toLocaleString()}
-                    </div>
-                  )}
-                </>
-              )}
+              {(sess: Session) => {
+                const [profile, setProfile] = useState<{ fullName?: string } | null>(null)
+                useEffect(() => {
+                  let on = true
+                  ;(async () => {
+                    try {
+                      const res = await fetch('/api/profile', { credentials: 'include' })
+                      if (!on) return
+                      const json = await res.json()
+                      setProfile(json.profile || null)
+                    } catch {}
+                  })()
+                  return () => { on = false }
+                }, [])
+                const display = profile?.fullName || sess?.name
+                return (
+                  <>
+                    {sess && (
+                      <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400">
+                        {display} · ₹{sim?.balance.toLocaleString()}
+                      </div>
+                    )}
+                  </>
+                )
+              }}
             </SessionClient>
             <Link href="/profile" className="rounded-full border border-zinc-800 px-3 py-1 text-xs text-zinc-400 hover:bg-zinc-900">Profile</Link>
           </div>

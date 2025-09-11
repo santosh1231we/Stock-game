@@ -21,6 +21,10 @@ export default function ProfileSidebar() {
             <Link href="/profile/info" className="rounded-lg px-3 py-2 hover:bg-zinc-900">User Info</Link>
             <Link href="/profile/overview" className="rounded-lg px-3 py-2 hover:bg-zinc-900">Account Overview</Link>
             <Link href="/profile/portfolio" className="rounded-lg px-3 py-2 hover:bg-zinc-900">Portfolio (Public)</Link>
+            <Link href="/buy" className="rounded-lg px-3 py-2 hover:bg-zinc-900">Buy</Link>
+            <Link href="/sell" className="rounded-lg px-3 py-2 hover:bg-zinc-900">Sell</Link>
+            <Link href="/positions" className="rounded-lg px-3 py-2 hover:bg-zinc-900">Positions</Link>
+            <Link href="/history" className="rounded-lg px-3 py-2 hover:bg-zinc-900">History</Link>
           </nav>
         </div>
       )}

@@ -61,6 +61,9 @@ export default function Navigation() {
               )}
             </SessionClient>
             <Link href="/profile" className="rounded-full border border-zinc-800 px-3 py-1 text-xs text-zinc-400 hover:bg-zinc-900">Profile</Link>
+            <form action="/api/auth/logout" method="post">
+              <button className="rounded-full border border-zinc-800 px-3 py-1 text-xs text-zinc-400 hover:bg-zinc-900">Logout</button>
+            </form>
           </div>
         </div>
       </div>

@@ -15,7 +15,11 @@ export async function POST(req: Request) {
       );
     }
 
+    const userId = crypto.randomUUID();
+    const username = name.toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 16) || "user";
     const session = {
+      userId,
+      username,
       name,
       email,
       ts: Date.now(),

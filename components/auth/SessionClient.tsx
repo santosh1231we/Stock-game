@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export type Session = { name: string; email: string; ts: number } | null;
+export type Session = { userId?: string; username?: string; name: string; email: string; ts: number } | null;
 
 // Reads cookie via an API bridge to avoid hydration mismatch
 export default function SessionClient({ children }: { children: (s: Session) => React.ReactNode }) {

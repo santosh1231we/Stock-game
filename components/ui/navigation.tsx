@@ -21,6 +21,7 @@ import { loadState } from "@/lib/sim"
 const NAVIGATION = [
   { title: "Markets", href: "/" },
   { title: "Screener", href: "/screener" },
+  { title: "Leaderboard", href: "/leaderboard" },
 ]
 
 export default function Navigation() {

@@ -108,6 +108,79 @@ export default function ClientDashboard() {
     }, 0);
   }, [state, chart, symbol]);
 
+  // Helper to push current summary to server
+  useEffect(() => {
+    const pushSummary = async (s: SimState) => {
+      try {
+        const [{ session }, profileRes] = await Promise.all([
+          fetch('/api/session', { credentials: 'include' }).then(r => r.json()),
+          fetch('/api/profile', { credentials: 'include' }).then(r => r.json()).catch(() => ({ profile: {} })),
+        ])
+        if (!session?.userId) return
+        const totalInvested = s.portfolio.reduce((sum, h) => sum + h.avgPrice * h.qty, 0)
+        const netWorth = s.balance + totalInvested
+        const holdings = s.portfolio
+          .map(h => ({ symbol: h.symbol, shares: h.qty, value: Number((h.avgPrice * h.qty).toFixed(2)) }))
+          .sort((a, b) => b.value - a.value)
+          .slice(0, 5)
+        const settings = (() => {
+          try { return JSON.parse(localStorage.getItem('investlife-settings') || '{}') } catch { return {} }
+        })()
+        const payload = {
+          userId: session.userId,
+          username: session.username,
+          displayName: profileRes?.profile?.fullName || session.name,
+          netWorth,
+          totalInvested,
+          balance: s.balance,
+          holdings,
+          tradeCount: s.txns.filter(t => t.type !== 'SALARY').length,
+          portfolioPublic: settings?.portfolioPublic !== false,
+          leaderboardOptIn: settings?.leaderboard !== false,
+        }
+        await fetch('/api/leaderboard/ingest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+      } catch {}
+    }
+
+    // Debounce on state changes
+    const id = setTimeout(() => {
+      if (state) pushSummary(state)
+    }, 800)
+    return () => clearTimeout(id)
+  }, [state])
+
+  // Heartbeat push every 30s while on page
+  useEffect(() => {
+    if (!state) return
+    const id = setInterval(() => {
+      const s = state
+      if (s) {
+        ;(async () => {
+          try {
+            const totalInvested = s.portfolio.reduce((sum, h) => sum + h.avgPrice * h.qty, 0)
+            const netWorth = s.balance + totalInvested
+            // light check: only push if netWorth changed since last minute could be noisy; skipping for simplicity
+            await fetch('/api/session', { credentials: 'include' })
+              .then(r => r.json())
+              .then(({ session }) => {
+                if (!session?.userId) return
+                fetch('/api/leaderboard/ingest', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ userId: session.userId, username: session.username, netWorth, totalInvested, balance: s.balance }),
+                }).catch(() => {})
+              }).catch(() => {})
+          } catch {}
+        })()
+      }
+    }, 30000)
+    return () => clearInterval(id)
+  }, [state])
+
   if (!state) return null;
 
   return (

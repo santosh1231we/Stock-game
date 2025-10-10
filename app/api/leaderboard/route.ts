@@ -1,27 +1,27 @@
 import { NextResponse } from "next/server"
-import { redisZRevRangeWithScores, redisGet } from "@/lib/redis"
+import { db } from "@/lib/firebase-admin"
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
-  const period = (searchParams.get('period') || 'all').toLowerCase()
-  const limit = Math.min(100, Math.max(1, Number(searchParams.get('limit') || 50)))
-  const key = period === 'all' ? 'leaderboard:global' : `leaderboard:${period}`
+  const period = (searchParams.get("period") || "all").toLowerCase()
+  const limit = Math.min(100, Math.max(1, Number(searchParams.get("limit") || 50)))
   try {
-    const rows = await redisZRevRangeWithScores(key, 0, limit - 1)
-    const items = await Promise.all(rows.map(async (r, idx) => {
-      const user = await redisGet<any>(`user:${r.member}`)
-      const username = user?.username || 'user'
+    const snap = await db.collection("leaderboards").doc(period).collection("entries")
+      .orderBy("netWorth", "desc").limit(limit).get()
+
+    const items = snap.docs.map((d, i) => {
+      const v = d.data()
       return {
-        rank: idx + 1,
-        userId: r.member,
-        username,
-        netWorth: r.score,
-        profileUrl: `/u/${username}`,
+        rank: i + 1,
+        userId: v.userId,
+        username: v.username,
+        netWorth: v.netWorth || 0,
+        profileUrl: `/u/${v.username}`,
       }
-    }))
+    })
     return NextResponse.json({ period, items })
   } catch (e: any) {
-    return NextResponse.json({ error: e?.message || 'failed' }, { status: 500 })
+    return NextResponse.json({ error: e?.message || "failed" }, { status: 500 })
   }
 }
 

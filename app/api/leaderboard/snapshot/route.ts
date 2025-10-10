@@ -1,16 +1,25 @@
 import { NextResponse } from "next/server"
-import { redisZRevRangeWithScores, redisZAdd } from "@/lib/redis"
+import { db } from "@/lib/firebase-admin"
 
 export async function POST(req: Request) {
   try {
     const { period = 'daily', limit = 100 } = await req.json().catch(() => ({}))
-    const src = 'leaderboard:global'
-    const dst = `leaderboard:${String(period).toLowerCase()}`
-    const rows = await redisZRevRangeWithScores(src, 0, Math.min(1000, Number(limit || 100)) - 1)
-    for (const r of rows) {
-      await redisZAdd(dst, r.score, r.member)
-    }
-    return NextResponse.json({ ok: true, period: dst, count: rows.length })
+    const srcRef = db.collection('leaderboards').doc('all').collection('entries')
+    const dstRef = db.collection('leaderboards').doc(String(period).toLowerCase()).collection('entries')
+
+    const snap = await srcRef.orderBy('netWorth', 'desc').limit(Math.min(1000, Number(limit || 100))).get()
+    const batch = db.batch()
+    snap.docs.forEach(doc => {
+      const data = doc.data()
+      batch.set(dstRef.doc(doc.id), {
+        userId: data.userId,
+        username: data.username,
+        netWorth: data.netWorth || 0,
+        updatedAt: Date.now(),
+      }, { merge: true })
+    })
+    await batch.commit()
+    return NextResponse.json({ ok: true, period: String(period).toLowerCase(), count: snap.size })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message || 'failed' }, { status: 500 })
   }

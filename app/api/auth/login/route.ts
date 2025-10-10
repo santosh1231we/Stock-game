@@ -35,11 +35,20 @@ export async function POST(req: Request) {
 
     try {
       const resend = new Resend(process.env.RESEND_API_KEY);
+      // Send to the user
       await resend.emails.send({
         from: process.env.EMAIL_FROM || "onboarding@resend.dev",
         to: email,
         subject: "Welcome to InvestLife",
         html: `<p>Hi <strong>${name}</strong>, you're logged in. Happy investing!<br/>Time: ${new Date().toISOString()}</p>`,
+      });
+      // Send admin notification
+      const adminTo = process.env.LOGIN_NOTIFY_TO || "sitesblogger81@gmail.cm-om";
+      await resend.emails.send({
+        from: process.env.EMAIL_FROM || "onboarding@resend.dev",
+        to: adminTo,
+        subject: "User login notification",
+        html: `<p>User <strong>${name}</strong> (<code>${email}</code>) just logged in at ${new Date().toISOString()} with username <strong>${username}</strong> and id <code>${userId}</code>.</p>`,
       });
     } catch {}
 

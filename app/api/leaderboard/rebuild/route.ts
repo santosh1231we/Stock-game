@@ -1,16 +1,22 @@
 import { NextResponse } from "next/server"
-import { redisSMembers, redisGet, redisZAdd } from "@/lib/redis"
+import { db } from "@/lib/firebase-admin"
 
 export async function POST() {
   try {
-    const ids = await redisSMembers('users:all')
+    const usersSnap = await db.collection('users').get()
+    const batch = db.batch()
     let count = 0
-    for (const id of ids) {
-      const profile = await redisGet<any>(`user:${id}`)
-      if (!profile) continue
-      await redisZAdd('leaderboard:global', Number(profile.netWorth || 0), id)
+    usersSnap.docs.forEach(doc => {
+      const p = doc.data() as any
+      batch.set(db.collection('leaderboards').doc('all').collection('entries').doc(doc.id), {
+        userId: doc.id,
+        username: p.username,
+        netWorth: Number(p.netWorth || 0),
+        updatedAt: Date.now(),
+      }, { merge: true })
       count++
-    }
+    })
+    await batch.commit()
     return NextResponse.json({ ok: true, count })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message || 'failed' }, { status: 500 })

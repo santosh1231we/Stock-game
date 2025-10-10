@@ -34,3 +34,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# Firebase service account keys (block any variant/typo)
+*firebase-adminsdk*.json
+*firebase-service-account*.json
+*serviceAccount*.json
+invest-playfully-firebase-adminsdk-*.json
+investplayfulyy-firebase-adminesdk-*.json
+
+# Env files (recommended)
+.env
+.env.local
+.env.*.local

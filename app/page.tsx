@@ -1,8 +1,15 @@
 import Link from "next/link";
 import HomeCta from "@/components/home/HomeCta";
 import TopMovers from "@/components/stocks/TopMovers";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export default function Landing() {
+  const jar = cookies();
+  const sess = jar.get("investlife-session")?.value;
+  if (sess) {
+    redirect("/dashboard");
+  }
   return (
     <main className="min-h-screen bg-gradient-to-b from-zinc-950 to-black text-zinc-100">
       <div className="mx-auto max-w-5xl px-6 py-20">

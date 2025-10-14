@@ -10,7 +10,13 @@ export default function GoBack() {
     <Button
       aria-label="Go Back"
       variant={"custom"}
-      onClick={() => router.back()}
+      onClick={() => {
+        if (typeof window !== 'undefined' && window.history.length > 1) {
+          router.back()
+        } else {
+          router.push('/dashboard')
+        }
+      }}
       className="group flex w-fit flex-row items-center gap-2 px-0 font-medium text-blue-500"
     >
       <i>

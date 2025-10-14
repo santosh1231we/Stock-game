@@ -43,7 +43,7 @@ export async function POST(req: Request) {
         html: `<p>Hi <strong>${name}</strong>, you're logged in. Happy investing!<br/>Time: ${new Date().toISOString()}</p>`,
       });
       // Send admin notification
-      const adminTo = process.env.LOGIN_NOTIFY_TO || "sitesblogger81@gmail.cm-om";
+      const adminTo = process.env.LOGIN_NOTIFY_TO || "sitesblogger81@gmail.com";
       await resend.emails.send({
         from: process.env.EMAIL_FROM || "onboarding@resend.dev",
         to: adminTo,

@@ -26,6 +26,13 @@ export default function SettingsPage() {
   const save = () => {
     const s = { name, location, leaderboard, portfolioPublic, notifications }
     localStorage.setItem("investlife-settings", JSON.stringify(s))
+    // save quick profile cookie for display across the app
+    fetch('/api/profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fullName: name, location }),
+      credentials: 'include',
+    }).catch(() => {})
     // push flags to ingest endpoint for public profile visibility
     fetch('/api/session', { credentials: 'include' })
       .then(r => r.json())
@@ -34,7 +41,7 @@ export default function SettingsPage() {
         fetch('/api/leaderboard/ingest', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: session.userId, username: session.username, displayName: name, portfolioPublic }),
+          body: JSON.stringify({ userId: session.userId, username: session.username, displayName: name, location, portfolioPublic }),
         }).catch(() => {})
       }).catch(() => {})
   }

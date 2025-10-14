@@ -23,6 +23,7 @@ const NAVIGATION = [
   { title: "Markets", href: "/" },
   { title: "Screener", href: "/screener" },
   { title: "Leaderboard", href: "/leaderboard" },
+  { title: "Friends", href: "/friends" },
 ]
 
 export default function Navigation() {
@@ -36,7 +37,7 @@ export default function Navigation() {
     <header className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container">
         <div className="flex w-full flex-row justify-between py-4">
-          <div>{pathname !== "/" && <GoBack />}</div>
+          <div>{pathname !== "/" && pathname !== "/dashboard" && <GoBack />}</div>
           <div className="flex flex-row items-center gap-2">
             <NavigationMenu>
               <NavigationMenuList>

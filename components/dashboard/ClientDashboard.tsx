@@ -12,6 +12,8 @@ export default function ClientDashboard() {
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState<{ symbol: string; name: string; exchange?: string; type?: string }[]>([]);
   const [chart, setChart] = useState<{ t: string; c: number }[] | null>(null);
+  const [recs, setRecs] = useState<Array<{ type: 'gainer'|'loser'|'neutral'; symbol: string; name?: string; changePct?: number }>>([]);
+  const [news, setNews] = useState<Array<{ title: string; link: string; publisher?: string; ts?: number }>>([]);
 
   useEffect(() => {
     setState(loadState());
@@ -63,6 +65,25 @@ export default function ClientDashboard() {
       on = false;
     };
   }, [symbol]);
+
+  // Recommendations and simple news feed
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await fetch(`/api/leaderboard?as=recommendations`, { cache: 'no-store' })
+        const j = await r.json()
+        setRecs(Array.isArray(j.items) ? j.items : [])
+      } catch { setRecs([]) }
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(symbol)}`, { cache: 'no-store' })
+        const newsJson = await res.json().catch(() => ({ results: [] }))
+        const items = (newsJson.results || []).flatMap((x: any) => x?.news || [])
+          .slice(0, 6)
+          .map((n: any) => ({ title: n.title, link: n.link, publisher: n.publisher, ts: n.providerPublishTime }))
+        setNews(items)
+      } catch { setNews([]) }
+    })()
+  }, [symbol])
 
   const lastTickRef = useRef<number | null>(null);
   useEffect(() => {
@@ -184,7 +205,7 @@ export default function ClientDashboard() {
   if (!state) return null;
 
   return (
-    <main className="min-h-screen bg-black px-4 py-6 text-zinc-100">
+    <main className="min-h-screen bg-transparent px-4 py-6 text-zinc-100">
       <div className="mx-auto max-w-6xl">
         <header className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold">
@@ -296,6 +317,40 @@ export default function ClientDashboard() {
           </div>
         </div>
 
+        {/* Recommendations below holdings/search */}
+        <div className="mt-6 rounded-2xl border border-zinc-800 p-4">
+          <div className="mb-2 font-semibold">Recommended stocks</div>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {recs.map((r) => (
+              <button key={r.symbol} onClick={() => router.push(`/stocks/${r.symbol}`)} className={`flex items-center justify-between rounded-xl px-3 py-2 text-left transition-colors ${r.type==='gainer' ? 'bg-emerald-950/60 hover:bg-emerald-900/50' : r.type==='loser' ? 'bg-red-950/60 hover:bg-red-900/50' : 'bg-zinc-950 hover:bg-zinc-900'}`}>
+                <div className="truncate">
+                  <div className="font-semibold">{r.symbol}</div>
+                  {r.name ? <div className="text-xs text-zinc-500">{r.name}</div> : null}
+                </div>
+                {typeof r.changePct === 'number' ? (
+                  <div className={`rounded-md px-2 py-0.5 text-xs ${r.type==='loser' ? 'bg-red-900 text-red-300' : 'bg-emerald-900 text-emerald-300'}`}>
+                    {r.type==='loser' ? '' : '+'}{Number(r.changePct || 0).toFixed(2)}%
+                  </div>
+                ) : null}
+              </button>
+            ))}
+            {recs.length === 0 && <div className="text-sm text-zinc-500">No recommendations right now.</div>}
+          </div>
+        </div>
+
+        {/* Recent news */}
+        <div className="mt-6 rounded-2xl border border-zinc-800 p-4">
+          <div className="mb-2 font-semibold">Recent market news</div>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {news.map((n, idx) => (
+              <a key={idx} href={n.link} target="_blank" rel="noreferrer" className="rounded-xl bg-zinc-950 p-3 text-sm hover:bg-zinc-900">
+                <div className="mb-1 text-xs text-zinc-500">{n.publisher || 'News'}</div>
+                <div className="font-medium">{n.title}</div>
+              </a>
+            ))}
+            {news.length === 0 && <div className="text-sm text-zinc-500">No recent news.</div>}
+          </div>
+        </div>
         <div className="mt-6 rounded-2xl border border-zinc-800 p-4">
           <div className="mb-2 font-semibold">Recent activity</div>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">

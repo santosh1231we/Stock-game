@@ -12,7 +12,7 @@ export default function CertificateDialog({
 }: {
   open: boolean
   onClose: () => void
-  user: { id: string; name: string; username?: string }
+  user: { id?: string; name: string; username?: string }
   stats: { netWorth: number; balance: number; invested: number }
   badges: Badge[]
 }) {
@@ -72,7 +72,7 @@ export default function CertificateDialog({
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-t border-zinc-800/60 pt-4 text-xs text-zinc-500">
+            <div className="flex items-center justify-between border-t border-zinc-800/60 pt-4 text-xs text-zinc-500">
             <button
               onClick={() => {
                 // Placeholder share intent; later we’ll export as image and copy link from Firebase doc
@@ -87,7 +87,7 @@ export default function CertificateDialog({
             >
               Share
             </button>
-            <div>Future: store in Firebase (certificates/{user.id}) for sharing with friends</div>
+            <div>Future: store in Firebase (certificates/{user.id || 'user'}) for sharing with friends</div>
           </div>
         </div>
       </div>

@@ -24,7 +24,7 @@ export default function PublicPortfolioPage() {
       <CertificateDialog
         open={open}
         onClose={() => setOpen(false)}
-        user={{ id: state.user.id, name: state.user.name, username: state.user.username }}
+        user={{ name: state.user.name, username: (state as any).user?.username }}
         stats={{
           netWorth,
           balance: state.balance,

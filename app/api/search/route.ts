@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   try {
     const res = await yahooFinance.search(q, {
       quotesCount: 10,
-      newsCount: 0,
+      newsCount: 8,
       enableFuzzyQuery: true,
     });
 
@@ -28,7 +28,13 @@ export async function GET(req: Request) {
         type: (r.quoteType ?? "") as string,
       }));
 
-    return NextResponse.json({ results });
+    const news = (res.news || []).map((n: any) => ({
+      title: n.title,
+      link: n.link,
+      publisher: n.publisher,
+      providerPublishTime: n.providerPublishTime,
+    }));
+    return NextResponse.json({ results, news });
   } catch (e: any) {
     return NextResponse.json(
       { error: e?.message || "search failed" },

@@ -253,9 +253,9 @@ export default function ClientDashboard() {
               <div className="flex flex-col gap-6 p-10 md:p-14">
                 <div className="text-3xl font-extrabold tracking-tight">{`Welcome${sessionName ? `, ${sessionName}!` : '!'}`}</div>
                 <div className="space-y-3 text-zinc-200">
-                  <p>I'm Santosh — founder of this app, and I’ve genuinely been looking forward to having you here.</p>
-                  <p>This platform’s a sandbox for learning financial investing — no real money, no stress.</p>
-                  <p>I’ll personally guide you through your first ₹2000 profit simulation.</p>
+                  <p>I\'m Santosh — founder of this app, and I\’ve genuinely been looking forward to having you here.</p>
+                  <p>This platform\’s a sandbox for learning financial investing — no real money, no stress.</p>
+                  <p>I\’ll personally guide you through your first ₹2000 profit simulation.</p>
                   <p>Let’s begin your journey 🚀</p>
                 </div>
                 <div className="flex justify-end gap-3">

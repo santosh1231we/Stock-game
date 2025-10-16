@@ -24,7 +24,6 @@ const NAVIGATION = [
   { title: "Screener", href: "/screener" },
   { title: "Leaderboard", href: "/leaderboard" },
   { title: "Friends", href: "/friends" },
-  { title: "Roadmap", href: "/roadmap" },
 ]
 
 export default function Navigation() {

@@ -40,7 +40,7 @@ export default function RoadmapPage() {
       <div className="mx-auto max-w-5xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold">InQuest Roadmap</h1>
-          <p className="mt-2 text-zinc-400">What's coming next to your investing sandbox</p>
+          <p className="mt-2 text-zinc-400">What\'s coming next to your investing sandbox</p>
         </div>
 
         <div className="grid gap-6">
@@ -49,7 +49,7 @@ export default function RoadmapPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <h2 className="text-xl font-semibold">{feature.title}</h2>
-                  <p className="mt-1 text-zinc-400">{feature.description}</p>
+                  <p className="mt-1 text-zinc-400">{feature.description.replace(/'/g, "\'")}</p>
                 </div>
                 <div className="rounded-xl bg-zinc-900 px-3 py-1 text-sm text-zinc-300">
                   {feature.status}

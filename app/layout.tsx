@@ -8,6 +8,7 @@ import Footer from "@/components/ui/footer"
 import NotificationBus from "@/components/ui/notification"
 import ServiceWorkerRegister from "@/components/ui/sw-register"
 import Head from "next/head"
+import { Analytics } from "@vercel/analytics/next"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -44,6 +45,7 @@ export default function RootLayout({
             <ServiceWorkerRegister />
             <main className="container">{children}</main>
             <Footer />
+            <Analytics />
           </ThemeProvider>
         </body>
       </html>

@@ -87,7 +87,7 @@ export default function CertificateDialog({
             >
               Share
             </button>
-            <div>Future: store in Firebase (certificates/{user.id || &apos;user&apos;}) for sharing with friends</div>
+            <div>Future: store in Firebase (certificates/{user.id || 'user'}) for sharing with friends</div>
           </div>
         </div>
       </div>

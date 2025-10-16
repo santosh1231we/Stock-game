@@ -39,8 +39,8 @@ export async function POST(req: Request) {
       await resend.emails.send({
         from: process.env.EMAIL_FROM || "onboarding@resend.dev",
         to: email,
-        subject: "Welcome to InvestLife",
-        html: `<p>Hi <strong>${name}</strong>, you're logged in. Happy investing!<br/>Time: ${new Date().toISOString()}</p>`,
+        subject: "Welcome to InQuest",
+        html: `<p>Hi <strong>${name}</strong>, you're logged in to InQuest. Learn. Play. Profit!<br/>Time: ${new Date().toISOString()}</p>`,
       });
       // Send admin notification
       const adminTo = process.env.LOGIN_NOTIFY_TO || "sitesblogger81@gmail.com";

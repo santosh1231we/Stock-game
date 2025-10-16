@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
+import confetti from "canvas-confetti";
 import { useRouter } from "next/navigation";
 import { loadState, SimState, advanceActive } from "@/lib/sim";
 
@@ -14,9 +15,47 @@ export default function ClientDashboard() {
   const [chart, setChart] = useState<{ t: string; c: number }[] | null>(null);
   const [recs, setRecs] = useState<Array<{ type: 'gainer'|'loser'|'neutral'; symbol: string; name?: string; changePct?: number }>>([]);
   const [news, setNews] = useState<Array<{ title: string; link: string; publisher?: string; ts?: number }>>([]);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [sessionName, setSessionName] = useState<string | null>(null);
 
   useEffect(() => {
     setState(loadState());
+  }, []);
+
+  // Show onboarding once after login
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem('inquest-onboarding-seen');
+      if (!seen) {
+        setShowOnboarding(true);
+        // proper celebratory confetti
+        setTimeout(() => {
+          try {
+            const count = 220;
+            const defaults: any = { origin: { y: 0.6 } };
+            function fire(ratio: number, opts: any) {
+              confetti({ ...defaults, ...opts, particleCount: Math.floor(count * ratio) });
+            }
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+          } catch {}
+        }, 150);
+      }
+    } catch {}
+  }, []);
+
+  // Load session to greet with actual username/name
+  useEffect(() => {
+    (async () => {
+      try {
+        const json = await fetch('/api/session', { credentials: 'include' }).then(r => r.json());
+        const nm: string | undefined = json?.session?.name || json?.session?.username;
+        if (nm) setSessionName(nm);
+      } catch {}
+    })();
   }, []);
 
   // dashboard no longer fetches individual quotes; detailed view on stock page
@@ -207,9 +246,29 @@ export default function ClientDashboard() {
   return (
     <main className="min-h-screen bg-transparent px-4 py-6 text-zinc-100">
       <div className="mx-auto max-w-6xl">
+        {showOnboarding && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/70" onClick={() => { setShowOnboarding(false); try { localStorage.setItem('inquest-onboarding-seen','1') } catch {} }} />
+            <div className="relative mx-4 w-full max-w-4xl rounded-[32px] border border-white/20 bg-white/10 p-0 backdrop-blur-md shadow-[0_10px_60px_rgba(0,0,0,0.6),0_0_200px_40px_rgba(16,185,129,0.12)_inset]">
+              <div className="flex flex-col gap-6 p-10 md:p-14">
+                <div className="text-3xl font-extrabold tracking-tight">{`Welcome${sessionName ? `, ${sessionName}!` : '!'}`}</div>
+                <div className="space-y-3 text-zinc-200">
+                  <p>I'm Santosh — founder of this app, and I’ve genuinely been looking forward to having you here.</p>
+                  <p>This platform’s a sandbox for learning financial investing — no real money, no stress.</p>
+                  <p>I’ll personally guide you through your first ₹2000 profit simulation.</p>
+                  <p>Let’s begin your journey 🚀</p>
+                </div>
+                <div className="flex justify-end gap-3">
+                  <button onClick={() => { setShowOnboarding(false); try { localStorage.setItem('inquest-onboarding-seen','1') } catch {} }} className="rounded-xl border border-white/20 bg-white/10 px-5 py-2 text-sm text-white hover:bg-white/20">Close</button>
+                  <button onClick={() => { setShowOnboarding(false); try { localStorage.setItem('inquest-onboarding-seen','1') } catch {} }} className="rounded-xl bg-emerald-500 px-6 py-2 text-sm font-semibold text-black shadow-[0_10px_30px_rgba(16,185,129,0.35)] hover:bg-emerald-400">Next</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <header className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold">
-            Finly Dashboard <span className="ml-2 rounded-xl bg-zinc-900 px-3 py-1 text-sm text-zinc-400">Season: Earn. Invest. Flex.</span>
+            InQuest Dashboard <span className="ml-2 rounded-xl bg-zinc-900 px-3 py-1 text-sm text-zinc-400">Learn. Play. Profit.</span>
           </h1>
           <div className="text-sm text-zinc-400">Every 1 hour = 1 month</div>
         </header>

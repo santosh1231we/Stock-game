@@ -24,6 +24,7 @@ const NAVIGATION = [
   { title: "Screener", href: "/screener" },
   { title: "Leaderboard", href: "/leaderboard" },
   { title: "Friends", href: "/friends" },
+  { title: "Roadmap", href: "/roadmap" },
 ]
 
 export default function Navigation() {
@@ -56,7 +57,7 @@ export default function Navigation() {
             </NavigationMenu>
             <CommandMenu />
 
-            <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400"><span className="font-semibold">InvestLife</span> · Practice markets. Build habits. Risk ₹0.</div>
+            <div className="mr-2 rounded-xl border border-zinc-800 px-3 py-1 text-xs text-zinc-400"><span className="font-semibold">InQuest</span> · Learn. Play. Profit.</div>
             <SessionClient>
               {(sess: Session) => (
                 <NavUserBadge sess={sess} balance={sim?.balance} />

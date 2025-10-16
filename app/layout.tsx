@@ -12,9 +12,9 @@ import Head from "next/head"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "InvestLife — Practice markets. Build habits. Risk ₹0.",
+  title: "InQuest — Learn. Play. Profit",
   description:
-    "InvestLife helps you practice investing with virtual cash, live quotes, and habits that compound over time.",
+    "Your sandbox for mastering investing — risk-free, profit-ready.",
 }
 
 export default function RootLayout({

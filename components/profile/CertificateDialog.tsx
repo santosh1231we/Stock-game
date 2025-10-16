@@ -31,7 +31,7 @@ export default function CertificateDialog({
         <div className="flex flex-col gap-6 p-8 md:p-10">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-xs uppercase tracking-wider text-zinc-400">InvestLife Certificate</div>
+              <div className="text-xs uppercase tracking-wider text-zinc-400">InQuest Certificate</div>
               <div className="text-2xl font-extrabold">{user.name}{user.username ? <span className="ml-2 text-zinc-500">@{user.username}</span> : null}</div>
             </div>
             <div className="rounded-2xl bg-zinc-900/60 p-4 text-right">
@@ -76,9 +76,9 @@ export default function CertificateDialog({
             <button
               onClick={() => {
                 // Placeholder share intent; later we’ll export as image and copy link from Firebase doc
-                const shareText = `InvestLife Certificate — ${user.name} (${user.username || ''}) · Net Worth ₹${stats.netWorth.toLocaleString()}`
+                const shareText = `InQuest Certificate — ${user.name} (${user.username || ''}) · Net Worth ₹${stats.netWorth.toLocaleString()}`
                 if (navigator.share) {
-                  navigator.share({ title: 'InvestLife Certificate', text: shareText }).catch(() => {})
+                  navigator.share({ title: 'InQuest Certificate', text: shareText }).catch(() => {})
                 } else {
                   navigator.clipboard?.writeText(shareText).catch(() => {})
                 }

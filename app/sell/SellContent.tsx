@@ -17,7 +17,7 @@ export default function SellContent() {
         </div>
         <TickerSearch />
         <div className="mt-3 text-sm opacity-70">
-          Holdings are shown on Positions; execute in each stock’s page.
+          Holdings are shown on Positions; execute in each stock&apos;s page.
         </div>
       </div>
 

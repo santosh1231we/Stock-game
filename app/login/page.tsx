@@ -38,7 +38,7 @@ export default function LoginPage() {
   return (
     <main className="grid min-h-screen place-items-center bg-black text-zinc-100">
       <form onSubmit={onSubmit} className="w-full max-w-md rounded-2xl border border-zinc-800 p-6">
-        <h1 className="text-2xl font-bold">Welcome to InvestLife</h1>
+        <h1 className="text-2xl font-bold">Welcome to InQuest</h1>
         <p className="mt-2 text-zinc-400">Choose a display name to start investing with virtual cash.</p>
         <input
           value={name}
@@ -56,7 +56,7 @@ export default function LoginPage() {
           Enter Dashboard
         </button>
         {error && <div className="mt-2 text-sm text-red-400">{error}</div>}
-        <p className="mt-3 text-xs text-zinc-500">No signup, no emails. We’ll add OAuth later.</p>
+        <p className="mt-3 text-xs text-zinc-500">No signup, no emails. We&apos;ll add OAuth later.</p>
       </form>
     </main>
   );

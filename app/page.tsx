@@ -19,9 +19,9 @@ export default function Landing() {
     <main className="min-h-screen bg-gradient-to-b from-zinc-950 to-black text-zinc-100 relative overflow-hidden">
       {/* Dynamic multi-layer parallax gradients */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute -left-1/3 -top-1/3 h-[140vh] w-[140vw] animate-[spin_60s_linear_infinite] rounded-full bg-[radial-gradient(circle_at_25%_30%,rgba(16,185,129,0.18),transparent_52%),radial-gradient(circle_at_75%_40%,rgba(239,68,68,0.12),transparent_50%),radial-gradient(circle_at_50%_70%,rgba(24,24,27,0.7),transparent_62%)] blur-3xl" />
-        <div className="absolute -right-1/4 -bottom-1/4 h-[140vh] w-[140vw] animate-[spin_90s_linear_infinite_reverse] rounded-full bg-[radial-gradient(circle_at_70%_20%,rgba(239,68,68,0.16),transparent_48%),radial-gradient(circle_at_30%_60%,rgba(16,185,129,0.14),transparent_52%),radial-gradient(circle_at_50%_80%,rgba(0,0,0,0.65),transparent_60%)] blur-3xl" />
-        <div className="absolute left-1/2 top-1/2 h-[120vh] w-[120vw] -translate-x-1/2 -translate-y-1/2 animate-[pulse_18s_ease-in-out_infinite] rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.04),transparent_60%)] blur-2xl" />
+        <div className="absolute -left-1/2 -top-1/2 h-[180vh] w-[180vw] animate-[spin_24s_linear_infinite] rounded-full bg-[radial-gradient(circle_at_25%_30%,rgba(16,185,129,0.28),transparent_55%),radial-gradient(circle_at_75%_40%,rgba(239,68,68,0.22),transparent_52%),radial-gradient(circle_at_50%_70%,rgba(24,24,27,0.7),transparent_65%)] blur-3xl" />
+        <div className="absolute -right-1/2 -bottom-1/2 h-[180vh] w-[180vw] animate-[spin_36s_linear_infinite_reverse] rounded-full bg-[radial-gradient(circle_at_70%_20%,rgba(239,68,68,0.24),transparent_50%),radial-gradient(circle_at_30%_60%,rgba(16,185,129,0.22),transparent_55%),radial-gradient(circle_at_50%_80%,rgba(0,0,0,0.7),transparent_62%)] blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-[150vh] w-[150vw] -translate-x-1/2 -translate-y-1/2 animate-[pulse_8s_ease-in-out_infinite] rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.06),transparent_62%)] blur-2xl" />
       </div>
       <div className="mx-auto max-w-5xl px-6 py-20">
         <h1 className="text-5xl font-extrabold tracking-tight">
